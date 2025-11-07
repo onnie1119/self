@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>北海道の旅</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="icomoon/style.css">
+  <style>
+    body {
+      margin: 0;
+      background: #FAFAF7;
+      font-family: 'Noto Sans TC', sans-serif;
+      color: #444;
+      padding-bottom: 80px;
+    }
+
+    .topbar {
+      background: #3A7AFE;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .trip-title {
+      font-size: 18px;
+    }
+
+    .trip-date {
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .top-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .top-buttons button {
+      background: #ffffff30;
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .top-buttons button:hover {
+      background: #f0f4ff;
+      color: #3A7AFE;
+    }
+
+    .container {
+      padding: 0 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .day-tabs {
+      display: flex;
+      gap: 5px;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+
+    .day-tab {
+      background: none;
+      border: none;
+      font-size: 11px;
+      color: #999;
+      padding: 5px 6px;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .day-tab:hover {
+      color: #3A7AFE;
+    }
+
+    .day-tab.active {
+      color: #3A7AFE;
+      font-weight: 600;
+    }
+
+    .day-tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: #3A7AFE;
+      border-radius: 1px;
+    }
+
+    .day-section {
+      display: none;
+    }
+
+    .day-label {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 0.5rem;
+      padding-left: 0.3rem;
+      letter-spacing: 1.2px;
+      pointer-events: none;
+    }
+
+    .activity-card {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 6px;
+      margin-bottom: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background: #fdfdfc;
+    }
+
+    .activity-card img {
+      width: 90px;
+      height: 90px;
+      border-radius: 7px;
+      object-fit: cover;
+      margin-right: 15px;
+      background: #ddd;
+    }
+
+    .info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 5px;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #a87f30;
+      margin-bottom: 5px;
+    }
+
+    .note {
+      font-size: 11px;
+      color: #999;
+      letter-spacing: 0.5px;
+    }
+
+    .transport-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #999;
+      margin: 15px 0 15px 40px;
+      position: relative;
+      letter-spacing: 1px;
+    }
+
+    .transport-info::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      top: -8px;
+      bottom: -8px;
+      width: 1px;
+      background: repeating-linear-gradient(
+        to bottom,
+        #ccc,
+        #ccc 2px,
+        transparent 2px,
+        transparent 4px
+      );
+    }
+
+    a {
+      text-decoration: none;
+      display: block;
+    }
+
+    .scroll-end-message {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      text-align: center;
+      font-size: 13px;
+      color: #3A7AFE;
+      margin-top: 40px;
+      padding-bottom: 20px;
+    }
+
+    .scroll-end-message.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+	
+	.day-tabs-wrapper {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.day-tabs-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.day-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.day-tabs {
+  display: flex;
+  gap: 5px;
+  padding-bottom: 6px;
+  min-width: max-content;
+}
+
+.day-tab {
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #999;
+  padding: 5px 15px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.day-tab:hover {
+  color: #3A7AFE;
+}
+
+.day-tab.active {
+  color: #3A7AFE;
+  font-weight: 600;
+}
+
+.day-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: #3A7AFE;
+  border-radius: 1px;
+}
+
+.day-tabs-arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.day-tabs-arrow.left {
+  left: 0;
+}
+
+.day-tabs-arrow.right {
+  right: 0;
+}
+.day-tabs-scroll {
+ overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* iOS 慣性滾動 */
+  scroll-behavior: auto; /* 對手指滑動無效，可省略 */
+  touch-action: pan-x; /* 明確允許水平滑動 */
+  
+}
+.day-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -7px; /* 對齊灰底線 */
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #3A7AFE;
+  border-radius: 1px;
+}
+.day-tab::after {
+  transition: all 0.3s ease;
+}
+.day-tabs-scroll {
+  scroll-snap-type: x mandatory;
+}
+
+.day-tab {
+  scroll-snap-align: start;
+}
+
+
+.scroll-top-button:hover {
+  background: #2a5edb;
+  transform: translateX(-50%) scale(1.05);
+}
+.scroll-top-button {
+  display: none;
+}
+
+.scroll-top-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #3A7AFE;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 18px;
+  font-size: 11px;
+  
+  cursor: pointer;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.2);
+  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.3s ease, background 0.3s ease;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.scroll-top-button.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.scroll-top-button :hover{opacity:0.8;}
+
+
+  </style>
+</head>
+<body>
+
+	<div class="topbar">
+		<div class="trip-title">北海道の旅</div>
+		<div class="trip-date">旅を記錄する、思い出を綴る</div>
+		<div class="top-buttons">
+			<button>機票資訊</button>
+			<button>嚴選美食</button>
+ 			<button>景點介紹</button>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="day-tabs-wrapper">
+			<div class="day-tabs-arrow left" id="arrow-left"><span class="icon-arrow-left"></span></div>
+			<div class="day-tabs-scroll" id="dayTabsScroll">
+				<div class="day-tabs">
+					<button class="day-tab active" onclick="showDay(1)">第 1 天</button>
+					<button class="day-tab" onclick="showDay(2)">第 2 天</button>
+					<button class="day-tab" onclick="showDay(3)">第 3 天</button>
+					<button class="day-tab" onclick="showDay(4)">第 4 天</button>
+					<button class="day-tab" onclick="showDay(5)">第 5 天</button>
+					<button class="day-tab" onclick="showDay(6)">第 6 天</button>
+					<button class="day-tab" onclick="showDay(7)">第 7 天</button>
+            </div>
+          </div>
+          <div class="day-tabs-arrow right" id="arrow-right"><span class="icon-arrow-right"></span></div>
+        </div>
+
+    
+    
+	<!-- Day 1 -->
+    <div class="day-section" id="day-1" style="display:block;">
+		<div class="day-label">2026.02.09（一）</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=桃園機場&travelmode=driving" target="_blank">
+      
+        	<div class="activity-card">
+            	<img src="../Sapporo/圖.png">
+            	<div class="info">
+              		<div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;00:10</div>
+              		<div class="title">桃園機場T1</div>
+              		<div class="note">22:10&nbsp;&nbsp;報到託運</div>
+            	</div>
+			</div>
+		</a>
+    	<div class="transport-info"><span class="icon-airplane"></span> 2  小時  30  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=羽田機場&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;04:00</div>
+              <div class="title">羽田機場T3</div>
+              <div class="note">06:15&nbsp;&nbsp;報到託運</div>
+            </div>
+    	</div>
+	</a>
+    <div class="transport-info"><span class="icon-airplane"></span> 1  小時  30  分</div>
+    <a href="https://www.google.com/maps/dir/?api=1&destination=新千歲機場&travelmode=driving" target="_blank">
+        <div class="activity-card">
+            <img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;09:45</div>
+              <div class="title">新千歲機場</div>
+              <div class="note">預留1小時入境</div>
+            </div>
+    	</div>
+	</a>
+    <div class="transport-info"><span class="icon-travel-walk"></span> 10  分</div>
+    <a href="https://www.google.com/maps/dir/?api=1&destination=一幻拉麵 新千歲機場店, 日本〒066-0012 Hokkaido, Chitose, Bibi, ターミナルビル Domestic Terminal New Chitose Airport, 3F&travelmode=driving" target="_blank">
+        <div class="activity-card">
+            <img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;11:00</div>
+              <div class="title">一幻拉麵</div>
+              <div class="note">停留1小時用餐</div>
+            </div>
+    	</div>
+	</a>
+    <div class="transport-info"><span class="icon-travel-walk"></span> 10  分</div>
+    <a href="https://www.google.com/maps/dir/?api=1&destination=Kinotoya New Chitose Airport Factory, 2F Bibi, Chitose City, Hokkaido 066-0012&travelmode=driving" target="_blank">
+        <div class="activity-card">
+            <img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;12:00</div>
+              <div class="title">Kinotoya冰淇淋</div>
+              <div class="note">步行至2F購買</div>
+            </div>
+    	</div>
+	</a>
+    <div class="transport-info"><span class="icon-travel-bus"></span> 1  小時  20  分</div>
+    <a href="https://www.google.com/maps/dir/?api=1&destination=札幌由緣溫泉旅館 日本〒060-0001 Hokkaido, Sapporo, Chuo Ward, Kita 1 Jonishi, 7 Chome−６&travelmode=driving" target="_blank">
+        <div class="activity-card">
+            <img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;13:30</div>
+              <div class="title">由緣溫泉旅館</div>
+              <div class="note">Checkin&寄放行李</div>
+            </div>
+    	</div>
+	</a>
+    <div class="transport-info"><span class="icon-travel-train"></span> 20  分</div>
+    <a href="https://www.google.com/maps/dir/?api=1&destination=北海道大學&travelmode=driving" target="_blank">
+        <div class="activity-card">
+            <img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;14:30</div>
+              <div class="title">北海道大學</div>
+              <div class="note">雪中校園散步及拍照</div>
+            </div>
+    	</div>
+	</a>
+    <div class="transport-info"><span class="icon-travel-train"></span> 15  分</div>
+    <a href="https://www.google.com/maps/dir/?api=1&destination=奥芝商店 実家 日本〒060-0061 Hokkaido, Sapporo, Chuo Ward, Minami 1 Jonishi, 5 Chome−16 プレジデント松井ビル100 地下１階&travelmode=driving" target="_blank">
+        <div class="activity-card">
+            <img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;17:00</div>
+              <div class="title">奧芝咖哩</div>
+              <div class="note">停留1小時用餐</div>
+            </div>
+    	</div>
+	</a>
+    <div class="transport-info"><span class="icon-travel-walk"></span> 10  分</div>
+    <a href="https://www.google.com/maps/dir/?api=1&destination=札幌由緣溫泉旅館 日本〒060-0001 Hokkaido, Sapporo, Chuo Ward, Kita 1 Jonishi, 7 Chome−６&travelmode=driving" target="_blank">
+        <div class="activity-card">
+            <img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;18:30</div>
+              <div class="title">由緣溫泉旅館</div>
+              <div class="note">回旅館泡溫泉休息</div>
+            </div>
+    	</div>
+	</a>
+</div> 
+    <!-- Day 2 -->
+    <div class="day-section" id="day-2" style="display:none;">
+      <div class="day-label">2026.02.10（二）</div>
+        	<div class="activity-card">
+            	<img src="../Sapporo/圖.png">
+            	<div class="info">
+              		<div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;08:00</div>
+              		<div class="title">由緣溫泉旅館早餐</div>
+              		<div class="note">需提前加購早餐券￥3300</div>
+            	</div>
+			</div>
+		<div class="transport-info"><span class="icon-travel-car"></span> 7  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Toyota Rent a Car Sapporo Station, 1 Chome-2-4 Kita 5 Johigashi, Chuo Ward, Sapporo, Hokkaido 060-0035日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;09:00</div>
+              <div class="title">Toyota租車(札幌站前店)</div>
+              <div class="note">攜帶租車相關文件及駕照</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 35  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=國營瀧野鈴蘭丘陵公園 日本〒005-0862 Hokkaido, Sapporo, Minami Ward, Takino, 247&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;10:00</div>
+              <div class="title">瀧野鈴蘭丘陵公園</div>
+              <div class="note">停留4小時遊玩</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 35  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=札幌電視塔 日本〒060-0042 Hokkaido, Sapporo, Chuo Ward, Odorinishi, 1 Chome&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;15:00</div>
+              <div class="title">札幌電視塔</div>
+              <div class="note">停留半小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+         <div class="transport-info"><span class="icon-travel-walk"></span> 5  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=札幌市時計台 日本〒060-0001 Hokkaido, Sapporo, Chuo Ward, Kita 1 Jonishi, 2 Chome&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;15:30</div>
+              <div class="title">札幌計時台</div>
+              <div class="note">停留半小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 5  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=大通公園 日本〒060-0042 Hokkaido, Sapporo, Chuo Ward, Odorinishi, １〜１２丁目&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;16:00</div>
+              <div class="title">大通公園(札幌雪祭)</div>
+              <div class="note">停留1小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 10  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Tanuki koji shinran tei, 三条美松ビル 2F 5 Chome-14 Minami 3 Jonishi, Chuo Ward, Sapporo, Hokkaido 060-0063日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;17:00</div>
+              <div class="title">德壽燒肉(狸小路店)</div>
+              <div class="note">札幌著名白老和牛燒肉</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 3  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=狸小路商店街 日本〒060-0062 Hokkaido, Sapporo, Chuo Ward, 南2・3条西1～7丁目&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;19:00</div>
+              <div class="title">狸小路商店街</div>
+              <div class="note">停留2小時逛街採購</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 10  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=札幌由緣溫泉旅館 日本〒060-0001 Hokkaido, Sapporo, Chuo Ward, Kita 1 Jonishi, 7 Chome−６&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;21:00</div>
+              <div class="title">由緣溫泉旅館</div>
+              <div class="note">回旅館休息</div>
+            </div>
+    	</div>
+		</a>
+	</div>
+    <!-- Day 3 -->
+    <div class="day-section" id="day-3" style="display:none;">
+      <div class="day-label">2026.02.11（三）</div>
+        	<div class="activity-card">
+            	<img src="../Sapporo/圖.png">
+            	<div class="info">
+              		<div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;07:00</div>
+              		<div class="title">由緣溫泉旅館</div>
+              		<div class="note">提前準備超商早點在車上吃</div>
+            	</div>
+			</div>
+		<div class="transport-info"><span class="icon-travel-car"></span> 3  小時</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=美瑛神社 日本〒071-0213 Hokkaido, Kamikawa District, Biei, Higashimachi, 4 Chome−1−1&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;10:00</div>
+              <div class="title">美瑛神社</div>
+              <div class="note">停留1小時參拜拍照</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 5  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=純平洋食 junpei 日本〒071-0208 Hokkaido, Kamikawa District, Biei, Motomachi, 4 Chome−4−10&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;11:00</div>
+              <div class="title">純平洋食</div>
+              <div class="note">著名炸蝦丼飯必吃！！</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 5  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Biei 2 go, 日本〒071-0203 Hokkaido, Kamikawa District, Biei, Nishimachi, 1 Chome−2−10&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;12:30</div>
+              <div class="title">Biei2GO輕食</div>
+              <div class="note">網路激推豬排三明治跟焗烤麵！！</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 10  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Christmas tree, Bibaushi, Biei, Kamikawa District, Hokkaido, 日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;13:00</div>
+              <div class="title">美瑛聖誕樹</div>
+              <div class="note">停留1小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 30  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=白鬚瀑布 日本〒071-0235 Hokkaido, Kamikawa District, Biei, Shirogane&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;14:30</div>
+              <div class="title">白鬚瀑布</div>
+              <div class="note">停留半小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 5  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Aoi Pond, Shirogane, 美瑛町上川郡北海道 071-0235日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;15:30</div>
+              <div class="title">白金青池</div>
+              <div class="note">停留半小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 3  小時</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=成吉思汗 達摩 本店 日本〒064-0805 Hokkaido, Sapporo, Chuo Ward, Minami 5 Jonishi, 4 クリスタルビル 1F&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;19:30</div>
+              <div class="title">成吉思汗達摩本店</div>
+              <div class="note">札幌著名烤羊肉</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 15  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=札幌由緣溫泉旅館 日本〒060-0001 Hokkaido, Sapporo, Chuo Ward, Kita 1 Jonishi, 7 Chome−６&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;21:00</div>
+              <div class="title">由緣溫泉旅館</div>
+              <div class="note">回旅館休息</div>
+            </div>
+    	</div>
+		</a>
+	</div>
+
+	<!-- Day 4 -->
+    <div class="day-section" id="day-4" style="display:none;">
+      <div class="day-label">2026.02.12（四）</div>
+        	<div class="activity-card">
+            	<img src="../Sapporo/圖.png">
+            	<div class="info">
+              		<div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;08:00</div>
+              		<div class="title">由緣溫泉旅館</div>
+              		<div class="note">Checkout</div>
+            	</div>
+			</div>
+		<div class="transport-info"><span class="icon-travel-car"></span> 10  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=ベッセルホテルカンパーナすすきの 日本〒064-0805 Hokkaido, Sapporo, Chuo Ward, Minami 5 Jonishi, 6 Chome−16番地1&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;08:30</div>
+              <div class="title">Vessel Hotel</div>
+              <div class="note">寄放行李</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 1  小時</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=日本北海道小樽市 Asari, 1 Chome−5, 朝里駅&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;10:00</div>
+              <div class="title">小樽朝里站</div>
+              <div class="note">停留半小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 15  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=小樽政壽司 日本〒047-0024 Hokkaido, Otaru, Hanazono, 1 Chome−1−1&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;11:00</div>
+              <div class="title">小樽政壽司</div>
+              <div class="note">道地新鮮板前料理</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 13  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=小樽水族館 日本〒047-0047 Hokkaido, Otaru, Shukutsu, 3 Chome−303&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;13:00</div>
+              <div class="title">小樽水族館</div>
+              <div class="note">企鵝散步13:30/14:40場次</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 2  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Shukutsu Marine Land, 3 Chome Shukutsu, Otaru, Hokkaido 047-0047日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;15:00</div>
+              <div class="title">祝津Marineland</div>
+              <div class="note">體驗空中腳踏車(單次收費)+拍摩天輪</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 15  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Sakaimachi Street, 6-11 Sakaimachi, Otaru, Hokkaido 047-0027日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;16:00</div>
+              <div class="title">小樽堺町通り商店街</div>
+              <div class="note">停留1小時逛街</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 2  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=小樽音樂盒堂 本館 日本〒047-0015 Hokkaido, Otaru, Sumiyoshicho, 4−1&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;17:00</div>
+              <div class="title">音樂盒堂本館</div>
+              <div class="note">停留半小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 20  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=小樽運河, 日本北海道小樽市&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;18:00</div>
+              <div class="title">小樽運河(雪燈之路)</div>
+              <div class="note">每年2月中旬限定雪燈之路祭典</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-car"></span> 50  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=ベッセルホテルカンパーナすすきの 日本〒064-0805 Hokkaido, Sapporo, Chuo Ward, Minami 5 Jonishi, 6 Chome−16番地1&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;20:00</div>
+              <div class="title">Vessel Hotel</div>
+              <div class="note">回旅館休息</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 5  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=薄野 肉海鮮炉端 芯々, 日本〒064-0806 Hokkaido, Sapporo, Chuo Ward, Minami 6 Jonishi, 4 Chome 高瀬ビル 1F&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;21:00</div>
+              <div class="title">肉海鮮炉端芯々</div>
+              <div class="note">出門覓食宵夜(網友推薦居酒屋)</div>
+            </div>
+    	</div>
+		</a>
+     </div>
+     
+    <!-- Day 5 -->
+    <div class="day-section" id="day-5" style="display:none;">
+      <div class="day-label">2026.02.13（五）</div>
+        	<div class="activity-card">
+            	<img src="../Sapporo/圖.png">
+            	<div class="info">
+              		<div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;08:30</div>
+              		<div class="title">Vessel Hotel</div>
+              		<div class="note">新的一天又開始了！</div>
+            	</div>
+			</div>
+        <div class="transport-info"><span class="icon-travel-car"></span> 10  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Toyota Rent a Car Sapporo Station, 1 Chome-2-4 Kita 5 Johigashi, Chuo Ward, Sapporo, Hokkaido 060-0035日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;09:00</div>
+              <div class="title">Toyota還車(札幌站前店)</div>
+              <div class="note">需提前加好油</div>
+            </div>
+    	</div>
+		</a>
+		<div class="transport-info"><span class="icon-travel-bus"></span> 20  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=二條市場, 日本〒060-0052 Hokkaido, Sapporo, Chuo Ward, Minami 2 Johigashi, 1 Chome, 南３条東１丁目〜２丁目&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;10:00</div>
+              <div class="title">二條市場</div>
+              <div class="note">吃海鮮早點、拍照</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 30  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=北海道神宮 日本〒064-0959 Hokkaido, Sapporo, Chuo Ward, Miyagaoka, 474&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;12:00</div>
+              <div class="title">北海道神宮</div>
+              <div class="note">停留1小時拍照打卡</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 20  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Kitamaruyamakyoju, 26 Chome-5-12 Kita 6 Jonishi, Chuo Ward, Sapporo, Hokkaido 064-0826日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;14:00</div>
+              <div class="title">円山教授2號店</div>
+              <div class="note">網路超紅牡蠣碎肉咖哩</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 50  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=藻岩山纜車山麓駅入口 日本〒064-0942 Hokkaido, Sapporo, Chuo Ward, Fushimi, 5 Chome−3−7&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;16:00</div>
+              <div class="title">藻岩山夜景</div>
+              <div class="note">搭乘兩段式纜車欣賞夕陽與夜景</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-train"></span> 36  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=ベッセルホテルカンパーナすすきの 日本〒064-0805 Hokkaido, Sapporo, Chuo Ward, Minami 5 Jonishi, 6 Chome−16番地1&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;18:00</div>
+              <div class="title">Vessel Hotel</div>
+              <div class="note">回旅館休息</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 5  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=VESSEL HOTEL CAMPANA SUSUKINO, 6 Chome-16番地1 Minami 5 Jōnishi, 中央區札幌市北海道日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;20:00</div>
+              <div class="title">餃子の山岡家</div>
+              <div class="note">出門覓食宵夜</div>
+            </div>
+    	</div>
+		</a>
+	</div>
+    <!-- Day 6 -->
+    <div class="day-section" id="day-6" style="display:none;">
+      <div class="day-label">2026.02.14（六）</div>
+        	<div class="activity-card">
+            	<img src="../Sapporo/圖.png">
+            	<div class="info">
+              		<div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;07:30</div>
+              		<div class="title">Vessel Hotel</div>
+              		<div class="note">跟團的一天，可提前準備乾糧上路！</div>
+            	</div>
+			</div>
+        <div class="transport-info"><span class="icon-travel-car"></span> 8  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Odori Nishi 1 chome, 1-chōme Ōdōrinishi, Chuo Ward, Sapporo, Hokkaido 060-0042日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;08:00</div>
+              <div class="title">大通站</div>
+              <div class="note">需提前10分鐘到集合地</div>
+            </div>
+    	</div>
+		</a>
+		<div class="transport-info"><span class="icon-travel-bus"></span> 2  小時</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Shikotsu Toya National Park Silo Observation Deck, 3-5 Naruka, Toyako, Abuta District, Hokkaido 049-5832日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;10:00</div>
+              <div class="title">洞爺湖展望台</div>
+              <div class="note">停留1小時20分鐘自由活動</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 30  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=Lake Hill Farm, 127 Hanawa, Toyako, Abuta District, Hokkaido 049-5724日本&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;12:00</div>
+              <div class="title">萊克希爾農場</div>
+              <div class="note">停留30分鐘自由活動</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 25  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=昭和新山熊牧場 日本〒052-0102 Hokkaido, Usu District, Sobetsu, Showashinzan, 183&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;13:30</div>
+              <div class="title">昭和新山熊牧場</div>
+              <div class="note">停留1小時自由活動(需自理門票￥1000)</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 50  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=登別地獄谷 日本〒059-0551 Hokkaido, Noboribetsu, Noboribetsuonsencho, 無番地&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;15:30</div>
+              <div class="title">登別地獄谷</div>
+              <div class="note">停留40分鐘自由活動</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 1  小時  35  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=定期観光バスのりば, 日本〒060-0807 Hokkaido, Sapporo, Kita Ward, Kita 7 Jonishi, 4 Chome−1−2&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;18:00</div>
+              <div class="title">JR札幌站</div>
+              <div class="note">北口巴士停車場解散</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-walk"></span> 10  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=拉麵 札幌一粒庵 日本〒060-0004 Hokkaido, Sapporo, Chuo Ward, Kita 4 Jonishi, 1 Chome−１番 ホクレンビル 地下１階&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;18:30</div>
+              <div class="title">一粒庵</div>
+              <div class="note">米其林指南推薦蒜味醬油拉麵</div>
+            </div>
+    	</div>
+		</a>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 20  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=ベッセルホテルカンパーナすすきの 日本〒064-0805 Hokkaido, Sapporo, Chuo Ward, Minami 5 Jonishi, 6 Chome−16番地1&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;20:00</div>
+              <div class="title">Vessel Hotel</div>
+              <div class="note">回旅館休息</div>
+            </div>
+    	</div>
+		</a>
+	</div>
+    <!-- Day 7 -->
+    <div class="day-section" id="day-7" style="display:none;">
+      <div class="day-label">2026.02.15（日）</div>
+        	<div class="activity-card">
+            	<img src="../Sapporo/圖.png">
+            	<div class="info">
+              		<div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;07:30</div>
+              		<div class="title">Vessel Hotel</div>
+              		<div class="note">北海道最後一餐(需加購￥2300)</div>
+            	</div>
+			</div>
+        <div class="transport-info"><span class="icon-travel-bus"></span> 1  小時 20 分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=新千歲機場&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;08:00</div>
+              <div class="title">新千歲機場</div>
+              <div class="note">可提前三小時至機場最後採購</div>
+            </div>
+    	</div>
+		</a>
+		<div class="transport-info"><span class="icon-airplane"></span> 4  小時 55  分</div>
+		<a href="https://www.google.com/maps/dir/?api=1&destination=臺灣桃園國際機場&travelmode=driving" target="_blank">
+        <div class="activity-card">
+			<img src="../Sapporo/圖.png">
+            <div class="info">
+              <div class="time"><span class="icon-watch"></span>&nbsp;&nbsp;16:05</div>
+              <div class="title">桃園機場T2</div>
+              <div class="note">歡迎歸國，快樂迎接過年！</div>
+            </div>
+    	</div>
+		</a>
+	</div>
+    <button id="scrollToTop" class="scroll-top-button" title="回到頂部">ピン留め</button>
+  <script>
+    function showDay(day) {
+      document.querySelectorAll('.day-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById('day-' + day).style.display = 'block';
+
+      document.querySelectorAll('.day-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.day-tab')[day - 1].classList.add('active');
+    }
+  </script>
+	<script>
+  const scrollEl = document.getElementById('dayTabsScroll');
+  const arrowLeft = document.getElementById('arrowLeft');
+  const arrowRight = document.getElementById('arrowRight');
+
+  function updateArrows() {
+    const scrollLeft = scrollEl.scrollLeft;
+    const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
+
+    arrowLeft.style.opacity = scrollLeft > 10 ? '1' : '0';
+    arrowRight.style.opacity = scrollLeft < maxScroll - 10 ? '1' : '0';
+  }
+
+  scrollEl.addEventListener('scroll', updateArrows);
+  window.addEventListener('resize', updateArrows);
+  document.addEventListener('DOMContentLoaded', updateArrows);
+</script>
+<script>
+  document.getElementById('scrollToTop').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  window.addEventListener('scroll', function () {
+  const btn = document.getElementById('scrollToTop');
+  btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+});
+
+</script>
+<script>
+  const scrollBtn = document.getElementById('scrollToTop');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      scrollBtn.classList.add('show');
+    } else {
+      scrollBtn.classList.remove('show');
+    }
+  });
+
+  scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+
+</body>
+</html>
